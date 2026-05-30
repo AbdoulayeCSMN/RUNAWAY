@@ -58,10 +58,10 @@
 \vspace*{3cm}
 {\Huge\bfseries\color{eclipsered} RUNAWAY}\\[0.4cm]
 {\LARGE\color{eclipsedark} Operation Eclipse}\\[1.2cm]
-{\Large\bfseries Guide du Joueur \&{} Guide de D\'eploiement}\\[0.6cm]
+{\Large\bfseries Guide du Joueur}\\[0.6cm]
 {\large Version 1.0}\\[2cm]
 {\large Jeu d'infiltration top-down --- Godot 4.6.2 / GDScript}\\[0.3cm]
-{\large Plateformes : Windows, Linux, Android (Google Play)}\\
+{\large Plateformes : Windows, Linux et Android}\\
 \vfill
 {\small Document compagnon du \emph{Game Design Document} v4.0}\\
 \end{titlepage}
@@ -236,149 +236,34 @@ de points qu'un tableau de chasse.
 
 \newpage
 % ==================================================================
-\part*{Partie II --- Guide de Build \&{} D\'eploiement}
-\addcontentsline{toc}{section}{Partie II --- Guide de Build \&{} D\'eploiement}
+\part*{Partie II --- Installer \&{} Lancer le Jeu}
+\addcontentsline{toc}{section}{Partie II --- Installer \&{} Lancer le Jeu}
 
 % ------------------------------------------------------------------
-\section{Pr\'erequis}
-\begin{center}
-\begin{tabular}{@{}lp{9.5cm}@{}}
-\toprule
-\textbf{Outil} & \textbf{Usage} \\
-\midrule
-Godot \textbf{4.6.2} (.NET non requis) & Moteur et exporteur. \\
-\emph{Android Build Template} & Mod\`ele Gradle export\'e depuis Godot. \\
-JDK 17 + Android SDK          & Compilation Gradle de l'APK/AAB. \\
-\code{keytool} (fourni avec le JDK) & G\'en\'eration du keystore de signature. \\
-PowerShell                    & Ex\'ecution des scripts utilitaires (\code{tools/}). \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-% ------------------------------------------------------------------
-\section{\'Etape 1 --- Pr\'eparer le projet}
+\section{Sur t\'el\'ephone Android}
 \begin{enumerate}[leftmargin=1.6em]
-  \item Ouvrez le projet dans Godot 4.6.2.
-  \item Menu \textbf{Projet $\rightarrow$ Installer le mod\`ele de build Android}
-  (\emph{Install Android Build Template}). Cela cr\'ee le dossier \code{android/build/}.
-  \item Dans \textbf{\'Editeur $\rightarrow$ Param\`etres de l'\'editeur $\rightarrow$
-  Export $\rightarrow$ Android}, renseignez les chemins du \textbf{JDK}, du
-  \textbf{SDK Android} et de \code{adb}/\code{keytool}.
+  \item R\'ecup\'erez le fichier \code{RUNAWAY.apk}.
+  \item Copiez-le sur votre t\'el\'ephone (c\^able USB, e-mail, cloud\dots), puis
+  ouvrez-le pour lancer l'installation.
+  \item Si Android bloque l'installation, autorisez les \emph{applications de
+  sources inconnues} pour votre navigateur ou votre gestionnaire de fichiers,
+  puis r\'eessayez.
+  \item Lancez le jeu depuis l'ic\^one \textbf{RUNAWAY} sur votre \'ecran d'accueil.
 \end{enumerate}
 
-\noindent Les ic\^ones de lanceur sont d\'ej\`a g\'en\'er\'ees dans
-\code{mobile\_icons/} (cible rouge sur fond sombre). Pour les r\'eg\'en\'erer :
-\begin{quote}\code{python tools/gen\_icons.py}\end{quote}
-
-% ------------------------------------------------------------------
-\section{\'Etape 2 --- Cr\'eer le keystore de signature}
-Google Play exige un APK/AAB \textbf{sign\'e}. Un script automatise la cr\'eation
-du keystore de \emph{release} et l'enregistrement des variables d'environnement
-attendues par Godot :
-\begin{quote}
-\code{pwsh -File tools/gen\_keystore.ps1 -Password "VOTRE\_MOT\_DE\_PASSE"}
-\end{quote}
-Ce script :
-\begin{itemize}[leftmargin=1.4em]
-  \item cr\'ee \code{\%USERPROFILE\%\textbackslash runaway-release.keystore} (alias \code{eclipse}) ;
-  \item d\'efinit les variables utilisateur \code{GODOT\_ANDROID\_KEYSTORE\_RELEASE\_PATH},
-  \code{\_USER} et \code{\_PASSWORD}.
-\end{itemize}
-
 \begin{astuce}
-\textbf{Conservez ce keystore et son mot de passe en lieu s\^ur.} Google Play
-associe d\'efinitivement votre application \`a cette cl\'e : la perdre vous
-emp\^eche de publier toute mise \`a jour. Le fichier est volontairement exclu du
-d\'ep\^ot via \code{.gitignore}.
+Le jeu se joue en mode paysage (t\'el\'ephone \`a l'horizontale). Les deux sticks
+apparaissent automatiquement : gauche pour bouger, droit pour viser et tirer.
 \end{astuce}
 
 % ------------------------------------------------------------------
-\section{\'Etape 3 --- Exporter}
-Deux pr\'esets sont d\'efinis dans \code{export\_presets.cfg} :
-\begin{center}
-\begin{tabular}{@{}llp{6cm}@{}}
-\toprule
-\textbf{Pr\'eset} & \textbf{Format} & \textbf{Usage} \\
-\midrule
-Android APK            & \code{.apk} & Tests sur appareil / \emph{sideload}. \\
-Android AAB (Play Store) & \code{.aab} & Publication sur Google Play Console. \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Caract\'eristiques communes : build Gradle activ\'e, architectures
-\code{arm64-v8a} + \code{armeabi-v7a}, \code{versionCode=1}, \code{versionName="1.0"},
-identifiant \code{com.eclipse.runaway}, mode immersif, signature \emph{release}
-activ\'ee, et \code{exclude\_filter} retirant \code{tools/}, \code{*.py},
-\code{mockups/} et \code{*.md} du paquet.
-
-\medskip
-\noindent\textbf{Depuis l'\'editeur :} Projet $\rightarrow$ Exporter $\rightarrow$
-choisir le pr\'eset $\rightarrow$ \emph{Exporter le projet}.
-
-\medskip
-\noindent\textbf{En ligne de commande (headless) :}
-\begin{quote}
-\code{godot --headless --export-release "Android AAB (Play Store)" build/runaway.aab}\\[2pt]
-\code{godot --headless --export-release "Android APK" build/runaway.apk}
-\end{quote}
-
-% ------------------------------------------------------------------
-\section{\'Etape 4 --- Publier sur Google Play}
+\section{Sur ordinateur (Windows / Linux)}
+Le jeu fonctionne avec le moteur gratuit \textbf{Godot 4.6.2}.
 \begin{enumerate}[leftmargin=1.6em]
-  \item Cr\'eez un compte d\'eveloppeur sur la \textbf{Google Play Console}.
-  \item Cr\'eez une nouvelle application, renseignez nom, langue et cat\'egorie
-  (\og{}Jeu / Action\fg{}).
-  \item Compl\'etez la \textbf{fiche Play Store} : description, captures d'\'ecran
-  (paysage), ic\^one 512$\times$512, banni\`ere de fonctionnalit\'e.
-  \item Remplissez les questionnaires obligatoires : \textbf{classification du
-  contenu} (PEGI/IARC), \textbf{politique de confidentialit\'e}, \textbf{s\'ecurit\'e
-  des donn\'ees}, et \textbf{public cible}.
-  \item Cr\'eez une \textbf{version} sur une piste (interne, ferm\'ee, ouverte ou
-  production) et t\'el\'eversez le fichier \code{build/runaway.aab}.
-  \item Soumettez pour \textbf{examen}. Apr\`es validation, publiez.
+  \item T\'el\'echargez Godot 4.6.2 sur le site officiel, puis ouvrez le logiciel.
+  \item Importez le dossier du jeu (s\'electionnez le fichier \code{project.godot}).
+  \item Appuyez sur \key{F5} pour jouer.
 \end{enumerate}
-
-% ------------------------------------------------------------------
-\section{Conformit\'e Play Store (checklist)}
-\begin{center}
-\begin{tabular}{@{}p{8.5cm}c@{}}
-\toprule
-\textbf{Crit\`ere} & \textbf{\'Etat} \\
-\midrule
-Format AAB pour publication                       & \textcolor{eclipsegreen}{OK} \\
-Signature \emph{release} (keystore d\'edi\'e)     & \textcolor{eclipsegreen}{OK} \\
-64 bits (\code{arm64-v8a}) inclus                 & \textcolor{eclipsegreen}{OK} \\
-Permissions minimales (aucune permission sensible) & \textcolor{eclipsegreen}{OK} \\
-Ic\^ones adaptatives (fg/bg 432\,px)              & \textcolor{eclipsegreen}{OK} \\
-Orientation paysage verrouill\'ee                 & \textcolor{eclipsegreen}{OK} \\
-Bouton \textbf{Retour} g\'er\'e (pause, pas de sortie brutale) & \textcolor{eclipsegreen}{OK} \\
-Interface adapt\'ee au tactile (sticks, boutons)  & \textcolor{eclipsegreen}{OK} \\
-\code{versionCode} incr\'ementable \`a chaque MAJ & \`a g\'erer \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\begin{astuce}
-\`A chaque nouvelle publication, \textbf{incr\'ementez \code{versionCode}}
-(1, 2, 3, \dots) dans le pr\'eset d'export : Google Play refuse deux
-t\'el\'eversements avec le m\^eme code de version.
-\end{astuce}
-
-% ------------------------------------------------------------------
-\section{D\'epannage}
-\begin{center}
-\begin{tabular}{@{}p{6.5cm}p{8cm}@{}}
-\toprule
-\textbf{Sympt\^ome} & \textbf{Solution} \\
-\midrule
-\og{}Android build template not installed\fg{} & Refaire l'\'etape 1 (installer le mod\`ele). \\
-\'Echec de signature                            & V\'erifier les variables d'env. du keystore (\code{gen\_keystore.ps1}). \\
-\og{}1 resource still in use at exit\fg{} (headless) & Avertissement b\'enin (musique en boucle de \code{AudioManager}), sans cons\'equence. \\
-APK rejet\'e (32 bits seul)                     & V\'erifier que \code{arm64-v8a} est coch\'e dans le pr\'eset. \\
-\bottomrule
-\end{tabular}
-\end{center}
 
 \vfill
 \begin{center}\small

@@ -1,41 +1,73 @@
 # RUNAWAY — Operation Eclipse
 
-Jeu d'infiltration top-down developpe avec **Godot 4.6.2** (GDScript). Vous incarnez
-l'Agent Zero, charge d'infiltrer le complexe Eclipse a travers une campagne de trois
-niveaux : voler les donnees classifiees, eviter les gardes et rejoindre la zone
-d'exfiltration. La discretion est recompensee, mais le jeu reste jouable en force.
+Un jeu d'infiltration vu de dessus. Vous etes l'Agent Zero : infiltrez le complexe
+Eclipse, volez les donnees secretes, evitez les gardes et fuyez. Discret ou en force,
+a vous de choisir.
+
+Trois niveaux a la suite (un centre de recherche, une foret, une ville). Plus vous
+restez discret et rapide, plus votre score grimpe.
 
 ![Menu principal](docs/screenshots/01_menu.png)
 
 ---
 
-## A propos
+## Comment jouer
 
-RUNAWAY combine furtivite et action dans un environnement vu de dessus. Le coeur du jeu
-repose sur une IA de gardes avancee et une progression de campagne ou le score, les
-points de vie et le temps sont cumules d'un niveau a l'autre.
+Le but de chaque niveau est simple :
 
-- **Plateformes** : Windows, Linux et Android (preparation Google Play).
-- **Moteur** : Godot 4.6.2, rendu compatibilite mobile (GL Compatibility).
-- **Langue** : francais ; jouable au clavier/souris et entierement au tactile.
+1. **Infiltrez-vous** sans entrer dans le champ de vision des gardes.
+2. **Piratez le coffre** (approchez-vous et maintenez le bouton d'interaction).
+3. **Fuyez vers la sortie** : une fois le coffre pirate, l'alarme sonne, foncez !
 
-## Fonctionnalites
+Quelques conseils :
 
-- **Campagne en 3 niveaux** enchaines automatiquement (Centre de recherche, Foret, Ville).
-- **IA de gardes intelligente** :
-  - vision en cone avec attenuation peripherique (detection plus fiable au centre) ;
-  - tir predictif (anticipation du deplacement du joueur) ;
-  - encerclement coordonne via une sequence de Weyl (repartition autour de la cible) ;
-  - evitement du tir ami (ne tire pas a travers un allie) ;
-  - propagation du bruit (les coups de feu alertent les gardes alentour) ;
-  - fouille coordonnee de la derniere position connue.
-- **Systeme d'alarme** a trois etats : Calme, Suspicion, Alerte.
-- **Furtivite** : mise a couvert, gestion du bruit (sprint), cones de vision a eviter.
-- **Niveaux data-driven** (catalogue ASCII, themes recherche / foret / ville).
-- **Interface adaptative** clavier/souris et tactile (sticks virtuels, boutons E/R).
-- **Pret pour le deploiement Android** : presets APK/AAB, signature release, icones adaptatives.
+- Les gardes voient devant eux dans un cone : passez derriere eux ou a couvert.
+- Courir (sprint) fait du bruit et attire les gardes. Marchez pour rester discret.
+- Tirer alerte tout le monde. Le silence rapporte plus de points.
+- Vous avez 3 vies, un pistolet et des munitions a recharger.
 
-## Captures d'ecran
+## Installation
+
+### Sur telephone Android
+
+1. Recuperez le fichier **`RUNAWAY.apk`**.
+2. Copiez-le sur votre telephone, puis ouvrez-le pour l'installer.
+3. Si Android bloque l'installation, autorisez les *applications de sources inconnues*
+   pour votre navigateur ou votre gestionnaire de fichiers, puis reessayez.
+4. Lancez le jeu depuis l'icone RUNAWAY.
+
+### Sur ordinateur (Windows / Linux)
+
+Le jeu se lance avec le moteur gratuit **Godot 4.6.2** :
+
+1. Telechargez Godot 4.6.2 sur le site officiel et ouvrez-le.
+2. Importez ce dossier (selectionnez le fichier `project.godot`).
+3. Appuyez sur **F5** pour jouer.
+
+## Les commandes
+
+### Sur telephone (ecran tactile)
+
+| Pour...        | Faites...                                      |
+| -------------- | ---------------------------------------------- |
+| Vous deplacer  | Stick gauche (pousse a fond = vous courez)     |
+| Viser et tirer | Stick droit                                    |
+| Recharger      | Bouton `R` a l'ecran                           |
+| Interagir      | Bouton `E` a l'ecran (maintenu)                |
+| Mettre en pause| Bouton Retour du telephone                     |
+
+### Sur ordinateur (clavier et souris)
+
+| Pour...        | Faites...                       |
+| -------------- | ------------------------------- |
+| Vous deplacer  | `W` `A` `S` `D` ou les fleches  |
+| Courir         | `Maj` (maintenu)                |
+| Viser et tirer | Clic gauche                     |
+| Recharger      | `R`                             |
+| Interagir      | `E` (maintenu)                  |
+| Mettre en pause| `Echap`                         |
+
+## Apercu des niveaux
 
 | Niveau 1 — Centre de recherche | Niveau 2 — La Foret |
 | :----------------------------: | :-----------------: |
@@ -45,85 +77,27 @@ points de vie et le temps sont cumules d'un niveau a l'autre.
 | :-----------------: | :-----------------: |
 | ![Niveau 3](docs/screenshots/05_level3_city.png) | ![Briefing](docs/screenshots/02_briefing.png) |
 
-## Commandes
+## Ce qui rend le jeu special
 
-### Clavier et souris
+- **Des gardes malins.** Ils anticipent vos mouvements, se repartissent pour vous
+  encercler, evitent de se tirer dessus entre eux, entendent les coups de feu et
+  fouillent l'endroit ou ils vous ont vu pour la derniere fois.
+- **Un systeme d'alarme** en trois temps : Calme, Suspicion, Alerte.
+- **Trois ambiances differentes** : interieur cloisonne, foret ouverte, ville de nuit.
+- **Un score** qui recompense la discretion, la rapidite et la survie.
+- **Jouable au clavier comme au tactile**, sans rien configurer.
 
-| Action                       | Touche                         |
-| ---------------------------- | ------------------------------ |
-| Se deplacer                  | `W` `A` `S` `D` ou fleches     |
-| Sprinter                     | `Maj` (maintenu)               |
-| Viser / tirer                | Clic gauche                    |
-| Recharger                    | `R`                            |
-| Interagir (coffre, terminal) | `E` (maintenu)                 |
-| Pause                        | `Echap`                        |
+## Pour les curieux (documentation)
 
-### Tactile (Android)
+Le dossier `docs/` contient deux documents detailles :
 
-| Action          | Geste                                          |
-| --------------- | ---------------------------------------------- |
-| Se deplacer     | Stick gauche (pousse a fond = sprint)          |
-| Viser / tirer   | Stick droit                                    |
-| Recharger       | Bouton `R` a l'ecran                           |
-| Interagir       | Bouton `E` a l'ecran (maintenu)                |
-| Pause           | Bouton Retour du telephone                     |
+- `RUNAWAY_GDD_v4.pdf` — le document de conception complet du jeu.
+- `RUNAWAY_GUIDE.pdf` — le guide complet (comment jouer, astuces de furtivite).
 
-## Lancer le jeu
+## Credits
 
-1. Installer **Godot 4.6.2** (version standard, .NET non requis).
-2. Ouvrir le dossier du projet depuis Godot (le fichier `project.godot`).
-3. Lancer la scene principale (`scenes/Main.tscn`) avec **F5**.
-
-En ligne de commande :
-
-```bash
-godot --path . res://scenes/Main.tscn
-```
-
-## Build Android et Play Store
-
-Les presets d'export (APK de test et AAB pour le Store) sont definis dans
-`export_presets.cfg`. La procedure complete (modele de build, generation du keystore,
-export, etapes Google Play Console) est detaillee dans le guide de deploiement.
-
-```bash
-godot --headless --export-release "Android AAB (Play Store)" build/runaway.aab
-```
-
-## Documentation
-
-| Document                          | Description                                            |
-| --------------------------------- | ------------------------------------------------------ |
-| `docs/RUNAWAY_GDD_v4.pdf`         | Game Design Document complet (mecaniques, IA, formules). |
-| `docs/RUNAWAY_GUIDE.pdf`          | Guide du joueur + guide de build et de deploiement.    |
-
-Les sources LaTeX correspondantes (`.tex`) sont fournies dans le meme dossier.
-
-## Structure du projet
-
-```
-RUNAWAY/
-  scenes/            Scenes Godot (menu, briefing, niveaux, joueur, gardes, HUD)
-  scripts/           Logique GDScript (etat de jeu, IA, niveaux, interface)
-  assets/            Sprites et sons utilises par le jeu
-  kenney_top-down-shooter/  Tuiles et sprites (Kenney, CC0) charges par les niveaux
-  mobile_icons/      Icones de lanceur Android (adaptatives)
-  docs/              GDD, guide et captures d'ecran
-  tools/             Scripts utilitaires (icones, keystore, captures)
-  export_presets.cfg Presets d'export Android (APK / AAB)
-```
-
-## Technologies
-
-- **Godot Engine 4.6.2** — moteur de jeu, GDScript.
-- **AStarGrid2D** — navigation et pathfinding des gardes.
-- **LaTeX** — documentation (GDD et guide).
-- **Python (Pillow)** — generation des icones de lanceur.
-
-## Licence et credits
-
-- Assets graphiques et sonores : **Kenney** (kenney.nl), licence **CC0**.
-- Code du jeu : voir le proprietaire du depot.
+- Graphismes et sons : **Kenney** (kenney.nl), libres d'utilisation (licence CC0).
+- Moteur : **Godot Engine 4.6.2**.
 
 ---
 
