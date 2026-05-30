@@ -1,0 +1,388 @@
+\documentclass[11pt,a4paper]{article}
+
+% ------------------------------------------------------------------
+%  RUNAWAY : Operation Eclipse - Guide du Joueur & Guide de Deploiement
+% ------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks,colorlinks=true,linkcolor=eclipsered,urlcolor=eclipseblue]{hyperref}
+
+\definecolor{eclipsered}{RGB}{192,57,43}
+\definecolor{eclipseblue}{RGB}{90,120,200}
+\definecolor{eclipsedark}{RGB}{30,30,40}
+\definecolor{eclipsegreen}{RGB}{60,160,90}
+\definecolor{codebg}{RGB}{244,244,248}
+\definecolor{tipbg}{RGB}{235,245,238}
+
+\titleformat{\section}{\Large\bfseries\color{eclipsered}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries\color{eclipsedark}}{\thesubsection}{0.5em}{}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{eclipsered}{\textbf{RUNAWAY}} -- Operation Eclipse}
+\rhead{Guide v1.0}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\code}[1]{\colorbox{codebg}{\texttt{#1}}}
+\newcommand{\key}[1]{\fcolorbox{eclipsedark}{white}{\small\texttt{#1}}}
+
+% Encadre "astuce" (capture du contenu via une savebox -> grouping robuste)
+\newsavebox{\astucebox}
+\newenvironment{astuce}{%
+  \begin{lrbox}{\astucebox}%
+  \begin{minipage}{\dimexpr0.93\linewidth-2\fboxsep}\color{eclipsedark}%
+  \textbf{\textcolor{eclipsegreen}{Astuce}} :\ %
+}{%
+  \end{minipage}%
+  \end{lrbox}%
+  \begin{center}\colorbox{tipbg}{\usebox{\astucebox}}\end{center}%
+}
+
+\begin{document}
+
+% ------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries\color{eclipsered} RUNAWAY}\\[0.4cm]
+{\LARGE\color{eclipsedark} Operation Eclipse}\\[1.2cm]
+{\Large\bfseries Guide du Joueur \&{} Guide de D\'eploiement}\\[0.6cm]
+{\large Version 1.0}\\[2cm]
+{\large Jeu d'infiltration top-down --- Godot 4.6.2 / GDScript}\\[0.3cm]
+{\large Plateformes : Windows, Linux, Android (Google Play)}\\
+\vfill
+{\small Document compagnon du \emph{Game Design Document} v4.0}\\
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ==================================================================
+\part*{Partie I --- Guide du Joueur}
+\addcontentsline{toc}{section}{Partie I --- Guide du Joueur}
+
+% ------------------------------------------------------------------
+\section{Bienvenue, Agent Zero}
+Vous incarnez l'\textbf{Agent Zero}, un sp\'ecialiste de l'infiltration envoy\'e
+dans le complexe \emph{Eclipse}. Votre objectif global se d\'eroule sur
+\textbf{trois niveaux} encha\^in\'es : le Centre de recherche, la For\^et et la
+Ville. Chaque niveau demande de r\'ecup\'erer des donn\'ees classifi\'ees puis
+de rejoindre la zone d'exfiltration --- id\'ealement \textbf{sans d\'eclencher
+l'alarme}.
+
+\medskip
+La discr\'etion est r\'ecompens\'ee : un parcours sans alarme et sans dommage
+maximise votre score final. Mais le jeu reste jouable \og{}bourrin\fg{} : vous
+\^etes arm\'e et pouvez neutraliser les gardes si la situation d\'eg\'en\`ere.
+
+% ------------------------------------------------------------------
+\section{Commandes}
+
+\subsection{Clavier \&{} souris (PC)}
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Action} & \textbf{Touche} \\
+\midrule
+Se d\'eplacer        & \key{W} \key{A} \key{S} \key{D} ou \key{Fl\`eches} \\
+Sprinter             & \key{Maj} (maintenu) \\
+Viser / Tirer        & \key{Clic gauche} (vise la souris) \\
+Recharger            & \key{R} \\
+Interagir (coffre, terminal) & \key{E} (maintenu) \\
+Pause                & \key{\'Echap} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Tactile (Android)}
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Action} & \textbf{Geste} \\
+\midrule
+Se d\'eplacer    & \textbf{Stick gauche} (pouss\'e \`a fond = sprint) \\
+Viser / Tirer    & \textbf{Stick droit} (tir automatique dans la direction vis\'ee) \\
+Recharger        & Bouton \key{R} \`a l'\'ecran \\
+Interagir        & Bouton \key{E} \`a l'\'ecran (maintenu) \\
+Pause            & Bouton \textbf{Retour} du t\'el\'ephone \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{astuce}
+Sur t\'el\'ephone, le \emph{stick gauche} g\`ere \`a la fois la vitesse et le
+sprint : un l\'eger d\'eplacement = marche silencieuse, pouss\'e \`a fond =
+course bruyante. Dosez votre pouce pour rester discret.
+\end{astuce}
+
+% ------------------------------------------------------------------
+\section{Lire l'interface (HUD)}
+\begin{center}
+\begin{tabular}{@{}p{4.2cm}p{10cm}@{}}
+\toprule
+\textbf{\'El\'ement} & \textbf{Signification} \\
+\midrule
+Cœurs (haut gauche)        & Points de vie (3 max). Rouge = plein, gris = perdu. \\
+Barre bleue (sous les cœurs) & Jauge d'endurance de \textbf{sprint}. Se vide en courant, se recharge \`a l'arr\^et. \\
+Munitions (haut droite)    & Balles restantes dans le chargeur (\code{8 / 8}). Affiche \og{}RECHARGEMENT\fg{} pendant le \texttt{reload}. \\
+Indicateur d'alarme        & \textcolor{eclipsegreen}{CALME} $\rightarrow$ \textcolor{orange}{SUSPICION} $\rightarrow$ \textcolor{eclipsered}{ALERTE}. \\
+Score (bas droite)         & Score cumul\'e de la campagne. \\
+Minimap                    & Plan du niveau, position du joueur, objectif et sortie. \\
+Banni\`ere de niveau       & \og{}NIVEAU n/3\fg{} affich\'ee au d\'ebut, dispara\^it apr\`es 2\,s. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ------------------------------------------------------------------
+\section{Le syst\`eme d'alarme}
+L'\'etat d'alerte du complexe \'evolue selon une machine \`a trois \'etats :
+
+\begin{center}
+\begin{tabular}{@{}lp{10cm}@{}}
+\toprule
+\textbf{\'Etat} & \textbf{D\'eclencheur \&{} cons\'equence} \\
+\midrule
+\textcolor{eclipsegreen}{\textbf{CALME}}     & Situation normale, gardes en patrouille. \\
+\textcolor{orange}{\textbf{SUSPICION}} & Un garde vous a entr'aper\c{c}u ou a entendu un bruit. Il enqu\^ete. Si vous vous cachez, le calme revient apr\`es un d\'elai. \\
+\textcolor{eclipsered}{\textbf{ALERTE}}      & Vous \^etes rep\'er\'e ou vous avez pirat\'e le coffre. Les gardes vous prennent en chasse et se coordonnent. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{astuce}
+Une fois le coffre pirat\'e, l'alarme passe \textbf{automatiquement} en ALERTE :
+c'est le signal de \textbf{fuir} vers l'exfiltration. Pr\'eparez votre
+itin\'eraire de repli \emph{avant} de lancer le piratage.
+\end{astuce}
+
+% ------------------------------------------------------------------
+\section{L'IA des gardes (ce qu'il faut savoir)}
+Les gardes sont \og{}intelligents\fg{} : comprendre leur comportement, c'est
+survivre.
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Vision en c\^one.} Ils voient devant eux dans un c\^one de
+  90$^\circ$. La d\'etection est plus fiable au centre du c\^one qu'\`a sa
+  p\'eriph\'erie : passer dans le coin de leur champ de vision est moins risqu\'e.
+  \item \textbf{Les murs bloquent la vue.} Un \texttt{RayCast} arr\^ete la vision
+  derri\`ere murs, caisses et eau. Restez \`a couvert.
+  \item \textbf{Le bruit attire.} Sprinter et surtout \textbf{tirer} g\'en\`ere
+  du bruit qui alerte les gardes alentour, m\^eme hors de vue.
+  \item \textbf{Tir pr\'edictif.} En combat, ils anticipent votre d\'eplacement :
+  ne courez pas en ligne droite, zigzaguez.
+  \item \textbf{Encerclement.} Plusieurs gardes se r\'epartissent autour de vous
+  plut\^ot que de s'agglutiner. \'Evitez de vous laisser entourer : adossez-vous
+  \`a un mur ou un couloir.
+  \item \textbf{Ils \'evitent le tir ami.} Ils ne tirent pas si un coll\`egue est
+  sur la ligne de feu --- vous pouvez exploiter cela en gardant un garde entre
+  vous et un autre.
+  \item \textbf{Fouille coordonn\'ee.} Quand ils vous perdent, ils fouillent
+  votre derni\`ere position connue. Changez de cachette apr\`es avoir bris\'e le
+  contact.
+\end{itemize}
+
+% ------------------------------------------------------------------
+\section{Les trois niveaux}
+\begin{center}
+\begin{tabular}{@{}clp{7.5cm}@{}}
+\toprule
+\textbf{\#} & \textbf{Niveau} & \textbf{Ambiance \&{} d\'efi} \\
+\midrule
+1 & Centre de recherche & Int\'erieur cloisonn\'e, couloirs et bureaux. Apprenez les bases de la furtivit\'e. \\
+2 & La For\^et          & Espaces ouverts, v\'eg\'etation et points d'eau. Plus de gardes mobiles. \\
+3 & La Ville            & Environnement urbain dense, exfiltration par h\'eliport. Mont\'ee finale en tension. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Boucle de jeu de chaque niveau :
+\begin{enumerate}[leftmargin=1.6em]
+  \item Infiltrez-vous en \'evitant les c\^ones de vision.
+  \item Atteignez le coffre / terminal et maintenez \key{E} pour pirater.
+  \item L'alarme se d\'eclenche : foncez vers la zone d'exfiltration.
+  \item La sortie ne s'ouvre que si l'objectif est rempli (\code{needs\_objective}).
+  \item L'exfiltration r\'eussie encha\^ine automatiquement sur le niveau suivant ;
+  votre score, vos vies et votre temps sont \textbf{cumul\'es}.
+\end{enumerate}
+
+% ------------------------------------------------------------------
+\section{Maximiser son score}
+Le score final r\'ecompense l'efficacit\'e et la discr\'etion :
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Discr\'etion totale} (aucune alarme d\'eclench\'ee sur toute la
+  campagne) = gros bonus.
+  \item \textbf{Rapidit\'e} : un temps de mission court rapporte plus.
+  \item \textbf{Int\'egrit\'e} : terminer avec un maximum de vies.
+  \item Neutraliser des gardes rapporte des points, mais l'approche
+  \og{}fant\^ome\fg{} (sans tir) reste la plus payante.
+\end{itemize}
+
+\begin{astuce}
+Pour un \emph{run} parfait : marchez (jamais de sprint inutile), tirez le moins
+possible, et m\'emorisez les patrouilles avant de bouger. Le silence vaut plus
+de points qu'un tableau de chasse.
+\end{astuce}
+
+\newpage
+% ==================================================================
+\part*{Partie II --- Guide de Build \&{} D\'eploiement}
+\addcontentsline{toc}{section}{Partie II --- Guide de Build \&{} D\'eploiement}
+
+% ------------------------------------------------------------------
+\section{Pr\'erequis}
+\begin{center}
+\begin{tabular}{@{}lp{9.5cm}@{}}
+\toprule
+\textbf{Outil} & \textbf{Usage} \\
+\midrule
+Godot \textbf{4.6.2} (.NET non requis) & Moteur et exporteur. \\
+\emph{Android Build Template} & Mod\`ele Gradle export\'e depuis Godot. \\
+JDK 17 + Android SDK          & Compilation Gradle de l'APK/AAB. \\
+\code{keytool} (fourni avec le JDK) & G\'en\'eration du keystore de signature. \\
+PowerShell                    & Ex\'ecution des scripts utilitaires (\code{tools/}). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ------------------------------------------------------------------
+\section{\'Etape 1 --- Pr\'eparer le projet}
+\begin{enumerate}[leftmargin=1.6em]
+  \item Ouvrez le projet dans Godot 4.6.2.
+  \item Menu \textbf{Projet $\rightarrow$ Installer le mod\`ele de build Android}
+  (\emph{Install Android Build Template}). Cela cr\'ee le dossier \code{android/build/}.
+  \item Dans \textbf{\'Editeur $\rightarrow$ Param\`etres de l'\'editeur $\rightarrow$
+  Export $\rightarrow$ Android}, renseignez les chemins du \textbf{JDK}, du
+  \textbf{SDK Android} et de \code{adb}/\code{keytool}.
+\end{enumerate}
+
+\noindent Les ic\^ones de lanceur sont d\'ej\`a g\'en\'er\'ees dans
+\code{mobile\_icons/} (cible rouge sur fond sombre). Pour les r\'eg\'en\'erer :
+\begin{quote}\code{python tools/gen\_icons.py}\end{quote}
+
+% ------------------------------------------------------------------
+\section{\'Etape 2 --- Cr\'eer le keystore de signature}
+Google Play exige un APK/AAB \textbf{sign\'e}. Un script automatise la cr\'eation
+du keystore de \emph{release} et l'enregistrement des variables d'environnement
+attendues par Godot :
+\begin{quote}
+\code{pwsh -File tools/gen\_keystore.ps1 -Password "VOTRE\_MOT\_DE\_PASSE"}
+\end{quote}
+Ce script :
+\begin{itemize}[leftmargin=1.4em]
+  \item cr\'ee \code{\%USERPROFILE\%\textbackslash runaway-release.keystore} (alias \code{eclipse}) ;
+  \item d\'efinit les variables utilisateur \code{GODOT\_ANDROID\_KEYSTORE\_RELEASE\_PATH},
+  \code{\_USER} et \code{\_PASSWORD}.
+\end{itemize}
+
+\begin{astuce}
+\textbf{Conservez ce keystore et son mot de passe en lieu s\^ur.} Google Play
+associe d\'efinitivement votre application \`a cette cl\'e : la perdre vous
+emp\^eche de publier toute mise \`a jour. Le fichier est volontairement exclu du
+d\'ep\^ot via \code{.gitignore}.
+\end{astuce}
+
+% ------------------------------------------------------------------
+\section{\'Etape 3 --- Exporter}
+Deux pr\'esets sont d\'efinis dans \code{export\_presets.cfg} :
+\begin{center}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Pr\'eset} & \textbf{Format} & \textbf{Usage} \\
+\midrule
+Android APK            & \code{.apk} & Tests sur appareil / \emph{sideload}. \\
+Android AAB (Play Store) & \code{.aab} & Publication sur Google Play Console. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Caract\'eristiques communes : build Gradle activ\'e, architectures
+\code{arm64-v8a} + \code{armeabi-v7a}, \code{versionCode=1}, \code{versionName="1.0"},
+identifiant \code{com.eclipse.runaway}, mode immersif, signature \emph{release}
+activ\'ee, et \code{exclude\_filter} retirant \code{tools/}, \code{*.py},
+\code{mockups/} et \code{*.md} du paquet.
+
+\medskip
+\noindent\textbf{Depuis l'\'editeur :} Projet $\rightarrow$ Exporter $\rightarrow$
+choisir le pr\'eset $\rightarrow$ \emph{Exporter le projet}.
+
+\medskip
+\noindent\textbf{En ligne de commande (headless) :}
+\begin{quote}
+\code{godot --headless --export-release "Android AAB (Play Store)" build/runaway.aab}\\[2pt]
+\code{godot --headless --export-release "Android APK" build/runaway.apk}
+\end{quote}
+
+% ------------------------------------------------------------------
+\section{\'Etape 4 --- Publier sur Google Play}
+\begin{enumerate}[leftmargin=1.6em]
+  \item Cr\'eez un compte d\'eveloppeur sur la \textbf{Google Play Console}.
+  \item Cr\'eez une nouvelle application, renseignez nom, langue et cat\'egorie
+  (\og{}Jeu / Action\fg{}).
+  \item Compl\'etez la \textbf{fiche Play Store} : description, captures d'\'ecran
+  (paysage), ic\^one 512$\times$512, banni\`ere de fonctionnalit\'e.
+  \item Remplissez les questionnaires obligatoires : \textbf{classification du
+  contenu} (PEGI/IARC), \textbf{politique de confidentialit\'e}, \textbf{s\'ecurit\'e
+  des donn\'ees}, et \textbf{public cible}.
+  \item Cr\'eez une \textbf{version} sur une piste (interne, ferm\'ee, ouverte ou
+  production) et t\'el\'eversez le fichier \code{build/runaway.aab}.
+  \item Soumettez pour \textbf{examen}. Apr\`es validation, publiez.
+\end{enumerate}
+
+% ------------------------------------------------------------------
+\section{Conformit\'e Play Store (checklist)}
+\begin{center}
+\begin{tabular}{@{}p{8.5cm}c@{}}
+\toprule
+\textbf{Crit\`ere} & \textbf{\'Etat} \\
+\midrule
+Format AAB pour publication                       & \textcolor{eclipsegreen}{OK} \\
+Signature \emph{release} (keystore d\'edi\'e)     & \textcolor{eclipsegreen}{OK} \\
+64 bits (\code{arm64-v8a}) inclus                 & \textcolor{eclipsegreen}{OK} \\
+Permissions minimales (aucune permission sensible) & \textcolor{eclipsegreen}{OK} \\
+Ic\^ones adaptatives (fg/bg 432\,px)              & \textcolor{eclipsegreen}{OK} \\
+Orientation paysage verrouill\'ee                 & \textcolor{eclipsegreen}{OK} \\
+Bouton \textbf{Retour} g\'er\'e (pause, pas de sortie brutale) & \textcolor{eclipsegreen}{OK} \\
+Interface adapt\'ee au tactile (sticks, boutons)  & \textcolor{eclipsegreen}{OK} \\
+\code{versionCode} incr\'ementable \`a chaque MAJ & \`a g\'erer \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{astuce}
+\`A chaque nouvelle publication, \textbf{incr\'ementez \code{versionCode}}
+(1, 2, 3, \dots) dans le pr\'eset d'export : Google Play refuse deux
+t\'el\'eversements avec le m\^eme code de version.
+\end{astuce}
+
+% ------------------------------------------------------------------
+\section{D\'epannage}
+\begin{center}
+\begin{tabular}{@{}p{6.5cm}p{8cm}@{}}
+\toprule
+\textbf{Sympt\^ome} & \textbf{Solution} \\
+\midrule
+\og{}Android build template not installed\fg{} & Refaire l'\'etape 1 (installer le mod\`ele). \\
+\'Echec de signature                            & V\'erifier les variables d'env. du keystore (\code{gen\_keystore.ps1}). \\
+\og{}1 resource still in use at exit\fg{} (headless) & Avertissement b\'enin (musique en boucle de \code{AudioManager}), sans cons\'equence. \\
+APK rejet\'e (32 bits seul)                     & V\'erifier que \code{arm64-v8a} est coch\'e dans le pr\'eset. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vfill
+\begin{center}\small
+\textcolor{eclipsedark}{Fin du guide --- bonne infiltration, Agent Zero.}
+\end{center}
+
+\end{document}

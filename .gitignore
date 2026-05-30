@@ -1,0 +1,31 @@
+# Godot
+.godot/
+.claude
+*.translation
+
+# Artefacts de build Android / export
+build/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Modele de build Android (regenerable via l'editeur)
+android/build/
+android/plugins/
+
+# OS / outils
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# Packs d'assets Kenney non utilises par le jeu (CC0, source brute, regenerable).
+kenney_ui-pack-space-expansion/
+kenney_racing-pack/
+kenney_particle-pack/
+kenney_impact-sounds/
+kenney_interface-sounds/
+kenney_music-jingles/
+kenney_sci-fi-sounds/
+kenney_pixel-ui-pack/

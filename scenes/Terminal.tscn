@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://u0fmfo58upcq"]
+
+[ext_resource type="Script" path="res://scripts/terminal.gd" id="1_term"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_term"]
+radius = 40.0
+
+[node name="Terminal" type="Area2D"]
+collision_layer = 32
+collision_mask = 2
+monitoring = true
+script = ExtResource("1_term")
+
+[node name="Frame" type="Polygon2D" parent="."]
+color = Color(0.12, 0.13, 0.16, 1)
+polygon = PackedVector2Array(-22, -16, 22, -16, 22, 16, -22, 16)
+
+[node name="Screen" type="Polygon2D" parent="."]
+color = Color(0.2, 0.75, 0.9, 1)
+polygon = PackedVector2Array(-17, -11, 17, -11, 17, 11, -17, 11)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_term")
+
+[node name="Prompt" type="Label" parent="."]
+offset_left = -110.0
+offset_top = -56.0
+offset_right = 110.0
+offset_bottom = -36.0
+horizontal_alignment = 1
+text = "[E] Pirater le terminal"

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100%" height="100%"
+viewBox="0 0 900 4200"
+version="1.1"
+xmlns="http://www.w3.org/2000/svg">
+
+    <!-- VERY LONG INDUSTRIAL BRIDGE / STRAIT CROSSING -->
+    <!-- TOP DOWN GAME STYLE -->
+
+    <!-- ENTRY PLATFORM -->
+    <rect x="398" y="0" width="104" height="120"
+          style="fill:rgb(90,95,106);"/>
+
+    <!-- EXIT PLATFORM -->
+    <rect x="398" y="4080" width="104" height="120"
+          style="fill:rgb(90,95,106);"/>
+
+    <!-- MAIN ROAD -->
+    <rect x="384" y="100" width="132" height="4000"
+          style="fill:rgb(104,112,128);"/>
+
+    <!-- CENTER ASPHALT SHADOW -->
+    <path d="M450,100L450,4100"
+          style="
+          fill:none;
+          stroke:black;
+          stroke-opacity:0.14;
+          stroke-width:3px;"/>
+
+    <!-- CENTER YELLOW DASH -->
+    <path d="M450,0L450,4200"
+          style="
+          fill:none;
+          stroke:rgb(255,230,120);
+          stroke-width:2.5px;
+          stroke-dasharray:22,12;
+          stroke-linecap:round;"/>
+
+    <!-- ROAD SIDE MARKINGS -->
+    <path d="M400,0L400,4200"
+          style="
+          fill:none;
+          stroke:white;
+          stroke-opacity:0.22;
+          stroke-width:1px;"/>
+
+    <path d="M500,0L500,4200"
+          style="
+          fill:none;
+          stroke:white;
+          stroke-opacity:0.22;
+          stroke-width:1px;"/>
+
+    <!-- METAL GUARD RAILS -->
+    <rect x="376" y="100" width="10" height="4000"
+          style="fill:rgb(119,128,144);fill-opacity:0.95;"/>
+
+    <rect x="514" y="100" width="10" height="4000"
+          style="fill:rgb(119,128,144);fill-opacity:0.95;"/>
+
+    <!-- OUTER STRUCTURE -->
+    <rect x="368" y="100" width="10" height="4000"
+          style="fill:rgb(90,106,122);"/>
+
+    <rect x="522" y="100" width="10" height="4000"
+          style="fill:rgb(90,106,122);"/>
+
+    <!-- MAIN SUPPORT CABLES -->
+    <path d="
+        M368,100
+        C330,700 330,1600 368,2500
+        C392,3400 392,3800 368,4100"
+        style="
+        fill:none;
+        stroke:rgb(74,90,112);
+        stroke-width:5px;
+        stroke-linecap:round;"/>
+
+    <path d="
+        M532,100
+        C570,700 570,1600 532,2500
+        C508,3400 508,3800 532,4100"
+        style="
+        fill:none;
+        stroke:rgb(74,90,112);
+        stroke-width:5px;
+        stroke-linecap:round;"/>
+
+    <!-- LIGHT REFLECTIONS -->
+    <path d="
+        M370,100
+        C336,700 336,1600 370,2500
+        C390,3400 390,3800 370,4100"
+        style="
+        fill:none;
+        stroke:rgb(125,145,170);
+        stroke-opacity:0.35;
+        stroke-width:1.8px;
+        stroke-linecap:round;"/>
+
+    <path d="
+        M530,100
+        C564,700 564,1600 530,2500
+        C510,3400 510,3800 530,4100"
+        style="
+        fill:none;
+        stroke:rgb(125,145,170);
+        stroke-opacity:0.35;
+        stroke-width:1.8px;
+        stroke-linecap:round;"/>
+
+    <!-- SIDE CONNECTION DETAILS -->
+    <g stroke="rgb(74,90,112)" stroke-width="1.7px">
+
+        <!-- LEFT -->
+        <path d="M368,180L376,180"/>
+        <path d="M365,320L376,320"/>
+        <path d="M362,500L376,500"/>
+        <path d="M360,720L376,720"/>
+        <path d="M358,980L376,980"/>
+        <path d="M357,1260L376,1260"/>
+        <path d="M357,1540L376,1540"/>
+        <path d="M358,1820L376,1820"/>
+        <path d="M360,2100L376,2100"/>
+        <path d="M362,2380L376,2380"/>
+        <path d="M365,2660L376,2660"/>
+        <path d="M367,2940L376,2940"/>
+        <path d="M369,3220L376,3220"/>
+        <path d="M370,3500L376,3500"/>
+        <path d="M371,3760L376,3760"/>
+        <path d="M372,3980L376,3980"/>
+
+        <!-- RIGHT -->
+        <path d="M532,180L524,180"/>
+        <path d="M535,320L524,320"/>
+        <path d="M538,500L524,500"/>
+        <path d="M540,720L524,720"/>
+        <path d="M542,980L524,980"/>
+        <path d="M543,1260L524,1260"/>
+        <path d="M543,1540L524,1540"/>
+        <path d="M542,1820L524,1820"/>
+        <path d="M540,2100L524,2100"/>
+        <path d="M538,2380L524,2380"/>
+        <path d="M535,2660L524,2660"/>
+        <path d="M533,2940L524,2940"/>
+        <path d="M531,3220L524,3220"/>
+        <path d="M530,3500L524,3500"/>
+        <path d="M529,3760L524,3760"/>
+        <path d="M528,3980L524,3980"/>
+    </g>
+
+    <!-- SUPPORT TOWERS -->
+
+    <!-- TOWER 1 -->
+    <g>
+        <rect x="310" y="260" width="90" height="160"
+              rx="8"
+              style="
+              fill:rgb(98,108,122);
+              stroke:rgb(60,70,84);
+              stroke-width:3px;"/>
+
+        <rect x="500" y="260" width="90" height="160"
+              rx="8"
+              style="
+              fill:rgb(98,108,122);
+              stroke:rgb(60,70,84);
+              stroke-width:3px;"/>
+
+        <path d="M310,315L400,315"
+              style="stroke:rgb(150,165,180);stroke-width:3px;"/>
+
+        <path d="M500,315L590,315"
+              style="stroke:rgb(150,165,180);stroke-width:3px;"/>
+    </g>
+
+    <!-- TOWER 2 -->
+    <g>
+        <rect x="310" y="1700" width="90" height="180"
+              rx="8"
+              style="
+              fill:rgb(98,108,122);
+              stroke:rgb(60,70,84);
+              stroke-width:3px;"/>
+
+        <rect x="500" y="1700" width="90" height="180"
+              rx="8"
+              style="
+              fill:rgb(98,108,122);
+              stroke:rgb(60,70,84);
+              stroke-width:3px;"/>
+
+        <path d="M310,1770L400,1770"
+              style="stroke:rgb(150,165,180);stroke-width:3px;"/>
+
+        <path d="M500,1770L590,1770"
+              style="stroke:rgb(150,165,180);stroke-width:3px;"/>
+    </g>
+
+    <!-- TOWER 3 -->
+    <g>
+        <rect x="310" y="3180" width="90" height="180"
+              rx="8"
+              style="
+              fill:rgb(98,108,122);
+              stroke:rgb(60,70,84);
+              stroke-width:3px;"/>
+
+        <rect x="500" y="3180" width="90" height="180"
+              rx="8"
+              style="
+              fill:rgb(98,108,122);
+              stroke:rgb(60,70,84);
+              stroke-width:3px;"/>
+
+        <path d="M310,3250L400,3250"
+              style="stroke:rgb(150,165,180);stroke-width:3px;"/>
+
+        <path d="M500,3250L590,3250"
+              style="stroke:rgb(150,165,180);stroke-width:3px;"/>
+    </g>
+
+</svg>

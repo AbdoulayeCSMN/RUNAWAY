@@ -1,0 +1,558 @@
+\documentclass[11pt,a4paper]{article}
+
+% ------------------------------------------------------------------
+%  RUNAWAY : Operation Eclipse - Game Design Document v4.0
+%  Genere automatiquement a partir du code source reellement implemente.
+% ------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks,colorlinks=true,linkcolor=eclipsered,urlcolor=eclipseblue]{hyperref}
+
+\definecolor{eclipsered}{RGB}{192,57,43}
+\definecolor{eclipseblue}{RGB}{90,120,200}
+\definecolor{eclipsedark}{RGB}{30,30,40}
+\definecolor{codebg}{RGB}{244,244,248}
+
+\titleformat{\section}{\Large\bfseries\color{eclipsered}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries\color{eclipsedark}}{\thesubsection}{0.5em}{}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{eclipsered}{\textbf{RUNAWAY}} -- Operation Eclipse}
+\rhead{GDD v4.0}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\code}[1]{\colorbox{codebg}{\texttt{#1}}}
+\newcommand{\param}[2]{\code{#1} $=$ #2}
+
+\begin{document}
+
+% ============================== PAGE DE TITRE ==============================
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries\color{eclipsered} RUNAWAY\par}
+\vspace{0.5cm}
+{\LARGE Operation Eclipse\par}
+\vspace{2cm}
+{\Large\bfseries GAME DESIGN DOCUMENT\par}
+\vspace{0.3cm}
+{\large VERSION 4.0 --- Edition production / mobile\par}
+\vspace{2cm}
+\begin{minipage}{0.8\textwidth}\centering\itshape
+« Tu entres. Tu braques. Tu cours. L'Organisation Fant\^ome ne te laissera
+pas partir facilement. »
+\end{minipage}
+\vfill
+{\small Jeu d'action / infiltration top-down --- Godot 4.6.2 / GDScript\par}
+{\small Campagne monde ouvert continu en 3 environnements --- Cible : Android (Play Store) \& Desktop\par}
+\vspace{0.5cm}
+{\small Document mis \`a jour le \today\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ============================== 1. VISION ==============================
+\section{Vision du Jeu}
+
+\subsection{1.1 Concept}
+RUNAWAY est un jeu d'action top-down dans lequel le joueur incarne \textbf{Agent
+Z\'ero}, un espion infiltr\'e qui doit traverser une s\'erie de zones ennemies,
+r\'ecup\'erer des donn\'ees classifi\'ees et s'exfiltrer avant que l'alarme ne se
+g\'en\'eralise. La cam\'era suit le joueur en vue de dessus. Le jeu m\^ele action
+directe (tir au pistolet silencieux) et furtivit\'e (couverture automatique,
+\'evitement des c\^ones de vision).
+
+\textbf{\'Evolution majeure depuis la v3 :} le jeu n'est plus un niveau unique
+rejouable mais une \textbf{campagne « monde ouvert continu » en trois
+environnements encha\^in\'es}. La sortie d'une zone devient l'entr\'ee de la
+suivante~: l'espion sort du centre de recherche, se retrouve dans une for\^et,
+puis dans une ville. Le score, les vies et le temps sont \textbf{cumul\'es} d'un
+bout \`a l'autre de la campagne.
+
+\subsection{1.2 Boucle de Jeu Core}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Infiltrer} --- entrer dans la zone en \'evitant les c\^ones de vision.
+  \item \textbf{Agir} --- accomplir l'objectif local (pirater le coffre au niveau~0)
+        ou traverser un point de passage (pont sur la rivi\`ere / le fleuve).
+  \item \textbf{Fuir} --- rejoindre le point d'exfiltration sous la pression des gardes.
+  \item \textbf{Encha\^iner} --- la sortie recharge la sc\`ene sur l'environnement suivant,
+        avec bonus d'\'etape, jusqu'\`a l'exfiltration finale.
+\end{enumerate}
+
+\subsection{1.3 Piliers de Design}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tension permanente} --- l'alarme monte et redescend ; rester discret est r\'ecompens\'e.
+  \item \textbf{IA cr\'edible} --- les gardes voient, entendent, communiquent, encerclent et anticipent.
+  \item \textbf{Lisibilit\'e} --- c\^ones de vision color\'es, HUD minimal, minimap.
+  \item \textbf{Accessibilit\'e multi-support} --- clavier/souris \emph{et} double-stick tactile.
+  \item \textbf{P\'erim\`etre ma\^itris\'e} --- production compl\`ete et stable plut\^ot qu'ambition diffuse.
+\end{itemize}
+
+% ============================== 2. UNIVERS ==============================
+\section{Univers et Narration}
+
+\subsection{2.1 Contexte}
+2031. L'Organisation Fant\^ome contr\^ole des gouvernements via des donn\'ees
+compromettantes stock\'ees physiquement. Agent Z\'ero, dernier op\'erationnel de
+l'unit\'e ECLIPSE, doit r\'ecup\'erer ces preuves et fuir \`a travers le dispositif
+de s\'ecurit\'e ennemi : un complexe de recherche, la for\^et qui l'entoure, puis
+la ville o\`u l'attend l'exfiltration finale.
+
+\subsection{2.2 Agent Z\'ero --- Fiche Personnage}
+Espion solitaire, \'equip\'e d'un pistolet silencieux (chargeur de 8 balles),
+capable de sprinter sur de courtes dur\'ees et de se mettre \`a couvert
+automatiquement. Trois points de vie, invincibilit\'e br\`eve apr\`es un coup.
+
+\subsection{2.3 L'Organisation Fant\^ome}
+\begin{itemize}[leftmargin=*]
+  \item R\'eseau criminel transnational, infiltr\'e dans les gouvernements.
+  \item Dispose de gardes arm\'es de trois profils et d'une coordination radio.
+  \item Point faible : les donn\'ees sont stock\'ees physiquement (pas de piratage \`a distance).
+\end{itemize}
+
+\subsection{2.4 Ton Narratif}
+Pas de cin\'ematiques. La narration passe par l'ambiance : musique adaptative
+selon l'\'etat d'alarme, environnements sombres, gardes qui se pr\'eviennent
+mutuellement. La pression se \emph{ressent}.
+
+\subsection{2.5 Structure de Campagne}
+La campagne est un encha\^inement continu de trois environnements
+(constante \param{LEVEL\_COUNT}{3}). La progression est port\'ee par le singleton
+\code{GameState} qui survit au rechargement de sc\`ene.
+
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+\textbf{Niv.} & \textbf{Environnement} & \textbf{Objectif local} & \textbf{Sortie} \\
+\midrule
+0 & Centre de recherche & Pirater le coffre (donn\'ees) & Exfil haut-gauche \\
+1 & La For\^et & --- (traversée) & Franchir le pont, rejoindre l'exfil \\
+2 & La Ville & --- (traversée) & Pont vers l'h\'elipad d'extraction \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Seul le niveau~0 exige un objectif (\code{needs\_objective = true}) ; les niveaux~1
+et~2 sont des travers
+\'ees o\`u atteindre la sortie suffit. Chaque \'etape franchie octroie un bonus de
+$+300$~pts.
+
+% ============================== 3. MECANIQUES ==============================
+\section{M\'ecaniques de Jeu}
+
+\subsection{3.1 Contr\^oles}
+Deux sch\'emas coexistent. Le sch\'ema tactile s'active \emph{paresseusement} :
+l'overlay reste invisible et ne perturbe pas le clavier tant qu'aucun doigt n'a
+touch\'e l'\'ecran.
+
+\begin{longtable}{p{3.2cm} p{4.3cm} p{6.5cm}}
+\toprule
+\textbf{Action} & \textbf{Clavier/Souris} & \textbf{Tactile (Android)} \\
+\midrule
+\endhead
+D\'eplacement & WASD / Fl\`eches & Stick gauche (moiti\'e gauche de l'\'ecran) \\
+Sprint & Maj & Stick gauche pouss\'e \`a fond ($\geq 82\,\%$) \\
+Viser & Orientation auto vers le d\'eplacement & Stick droit (direction) \\
+Tirer & Clic gauche & Stick droit maintenu \\
+Recharger & R & Bouton \textbf{R} (bord droit) \\
+Interagir & E & Bouton \textbf{E} (bord droit) \\
+Pause & \'Echap / P & Bouton \textbf{Retour} Android \\
+\bottomrule
+\end{longtable}
+
+\subsection{3.2 Syst\`eme de D\'eplacement}
+Vitesse de base \param{SPEED}{270} px/s. Le sprint multiplie la vitesse
+(\param{SPRINT\_MULT}{1.6}) et consomme une r\'eserve d'\'energie :
+
+\[
+\dot{e}(t) =
+\begin{cases}
+-1 & \text{si sprint actif } (e > 0,\ \vec{v}\neq 0,\ \text{hors couverture})\\[2pt]
++\,\texttt{SPRINT\_REGEN} & \text{sinon}
+\end{cases}
+\qquad e \in [0,\ \texttt{SPRINT\_MAX}]
+\]
+
+avec \param{SPRINT\_MAX}{2.2}~s et \param{SPRINT\_REGEN}{0.8}~s$^{-1}$.
+En couverture, la vitesse est r\'eduite : $v = \texttt{SPEED}\cdot\texttt{COVER\_SPEED\_MULT}$,
+\param{COVER\_SPEED\_MULT}{0.7}.
+
+\subsection{3.3 Syst\`eme de Tir}
+\begin{itemize}[leftmargin=*]
+  \item Chargeur : \param{MAG\_SIZE}{8} balles ; rechargement \param{RELOAD\_TIME}{1.2}~s (vuln\'erable).
+  \item Cadence : \param{FIRE\_COOLDOWN}{0.22}~s entre deux tirs.
+  \item Projectile : vitesse $700$~px/s, dur\'ee de vie $1.5$~s, 1 d\'eg\^at.
+  \item Tir silencieux : n'alerte pas les gardes hors champ de vision.
+\end{itemize}
+
+\subsection{3.4 Couverture Automatique}
+D\`es qu'un mur/obstacle est d\'etect\'e par la zone \code{CoverArea}, le joueur
+passe en couverture : hitbox r\'eduite \`a \param{COVER\_HITBOX\_MULT}{0.6} (-40\,\%)
+et vitesse \`a $0.7$ (-30\,\%).
+
+\subsection{3.5 Syst\`eme d'Alarme}
+L'alarme est une machine \`a trois \'etats globaux pilotant la musique et le score.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{\'Etat} & \textbf{Mont\'ee} & \textbf{Redescente} \\
+\midrule
+CALME & \'etat initial & --- \\
+SUSPICION & un garde voit/entend bri\`evement & apr\`es \texttt{SUSPICION\_TIMEOUT}$=5$\,s sans contact \\
+ALERTE & combat confirm\'e ou tir entendu & apr\`es \texttt{ALERT\_TIMEOUT}$=7$\,s sans combat $\to$ SUSPICION \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Formellement, deux minuteries d\'ecroissent dans \code{GameState.\_process} :
+\[
+t_{\text{susp}} \mathrel{-}= \Delta t \;\Rightarrow\; \text{CALME quand } t_{\text{susp}}\leq 0,
+\qquad
+t_{\text{combat}} \mathrel{+}= \Delta t \;\Rightarrow\; \text{SUSPICION quand } t_{\text{combat}}\geq 7.
+\]
+Chaque frame de combat d'un garde appelle \code{notify\_combat()} qui remet
+$t_{\text{combat}}\!=\!0$, maintenant l'alerte tant que le joueur est engag\'e.
+
+\subsection{3.6 Syst\`eme de Score}
+Le score est \textbf{cumulatif sur toute la campagne}. Bar\`eme :
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+\textbf{\'Ev\'enement} & \textbf{Points} \\
+\midrule
+Objectif principal (coffre) & $+1000$ \\
+Garde neutralis\'e & $+100$ /garde \\
+\'Etape de campagne franchie & $+300$ /\'etape \\
+Exfiltration finale r\'eussie & $+500$ \\
+Discr\'etion totale (alarme jamais d\'eclench\'ee) & $+500$ \\
+Point de vie perdu & $-50$ /PV \\
+Temps de mission & $-1$ /seconde \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Le score final retranche le temps une seule fois :
+\[
+\texttt{final\_score} = \texttt{score} - \big\lfloor \texttt{mission\_time} \big\rfloor .
+\]
+
+\subsection{3.7 Sant\'e et Invincibilit\'e}
+\param{MAX\_HEALTH}{3}. Apr\`es un coup, le joueur est invincible
+\param{IFRAME\_TIME}{0.5}~s (clignotement visuel). \`A $0$~PV : \'echec de mission.
+
+% ============================== 4. IA ==============================
+\section{Intelligence Artificielle des Ennemis}
+C'est le c\oe ur tactique du jeu. Cette section d\'ecrit l'IA \emph{r\'eellement
+impl\'ement\'ee} dans \code{guard.gd}, formules \`a l'appui.
+
+\subsection{4.1 Types de Gardes}
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Type} & \textbf{Comportement} & \textbf{Arm\'e} & \textbf{PV} \\
+\midrule
+BASIC & Patrouille, recule et appelle des renforts & Non & 2 \\
+ALERT & Cherche activement, tire & Oui & 2 \\
+ARMED & Tire, encercle, tient la distance id\'eale & Oui & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{4.2 Machine \`a \'Etats}
+Quatre \'etats : \textbf{PATROL} $\to$ \textbf{SUSPICION} $\to$ \textbf{COMBAT}
+$\to$ \textbf{SEARCH}, avec retours.
+
+\begin{center}\small
+\begin{tabular}{lll}
+\toprule
+\textbf{De} & \textbf{Vers} & \textbf{Condition} \\
+\midrule
+PATROL & SUSPICION & voit ou entend le joueur \\
+SUSPICION & COMBAT & contact visuel confirm\'e ($t_{\text{vu}}\geq$ \texttt{CONFIRM\_TIME}) \\
+SUSPICION & PATROL & a fouill\'e le dernier point vu $2.5$\,s \\
+COMBAT & SEARCH & perd le contact visuel \\
+SEARCH & COMBAT & retrouve le joueur (vue ou ou\"ie) \\
+SEARCH & PATROL & fouille infructueuse pendant \texttt{SEARCH\_TIME}$=6$\,s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{4.3 Perception : Champ de Vision}
+C\^one de demi-angle \param{VISION\_ANGLE}{$45^\circ$} (90$^\circ$ total). Port\'ee
+\param{RANGE\_CALM}{180} px en patrouille, \param{RANGE\_ALERT}{260} px en alerte.
+Un \code{RayCast2D} sur la couche \emph{world} bloque la vision derri\`ere les
+murs, caisses et l'eau.
+
+\textbf{Vision p\'eriph\'erique (nouveaut\'e).} La d\'etection n'est plus uniforme :
+nette dans l'axe, sa port\'ee d\'ecro\^it vers les bords du c\^one. Pour un \'ecart
+angulaire $\theta$ \`a la ligne de vis\'ee et $\theta_{1/2}=45^\circ$ :
+\[
+R_{\text{eff}}(\theta) = R \cdot \Big(1 - 0.45\,\tfrac{\theta}{\theta_{1/2}}\Big),
+\qquad 0 \leq \theta \leq \theta_{1/2}.
+\]
+Le joueur est vu si $d \leq R_{\text{eff}}(\theta)$ et la ligne est d\'egag\'ee.
+Au centre la port\'ee est de $100\,\%$, au bord du c\^one elle tombe \`a $55\,\%$.
+
+\textbf{Sens de proximit\'e.} Un intrus coll\'e ($d \leq$ \texttt{PROXIMITY\_SENSE}$=48$\,px)
+est rep\'er\'e m\^eme hors du c\^one.
+
+\textbf{Ou\"ie.} Le sprint du joueur g\'en\`ere du bruit ; un garde l'entend si
+$d \leq$ \texttt{NOISE\_HEARING}$=120$\,px.
+
+\subsection{4.4 Confirmation de D\'etection}
+La confirmation est plus rapide de pr\`es, plus lente de loin. Le compteur $t_{\text{vu}}$
+s'accumule avec un facteur de distance :
+\[
+\dot{t}_{\text{vu}} = \Delta t \cdot \operatorname{clamp}\!\Big(\tfrac{\texttt{RANGE\_ALERT}}{\max(d,1)},\ 0.55,\ 2.2\Big),
+\qquad \text{COMBAT d\`es } t_{\text{vu}} \geq \texttt{CONFIRM\_TIME}=0.55\,\text{s}.
+\]
+
+\subsection{4.5 Comportement de Combat : Encerclement}
+Les gardes arm\'es ne s'agglutinent plus face au joueur : chacun occupe un
+\textbf{secteur distinct} autour de lui. L'angle d'encerclement est stable et
+unique par garde, tir\'e d'une \emph{suite de Weyl} sur l'identifiant d'instance :
+\[
+\varphi_i = 2\pi \cdot \operatorname{frac}\!\big(\,\texttt{id}_i \cdot 0.6180339887\,\big)
+\quad(\text{nombre d'or}),
+\]
+ce qui r\'epartit les bearings de mani\`ere quasi-uniforme. Le garde vise le poste
+\[
+\vec{p}_{\text{poste}} = \vec{p}_{\text{joueur}} + R_{\text{pref}}\,(\cos\varphi',\ \sin\varphi'),
+\quad \varphi' = \varphi_i + 0.22\,s,\ s\in\{-1,+1\}\ \text{(strafe)},
+\]
+avec la distance de tir id\'eale \param{PREFERRED\_RANGE}{190}\,px et une zone morte
+\param{RANGE\_HYSTERESIS}{45}\,px pour \'eviter le yo-yo. Il rejoint son poste via
+le pathfinding (contournement des murs) tout en gardant l'arme braqu\'ee sur la cible.
+
+Le garde \textbf{non arm\'e} (BASIC) se replie en biais \emph{vers l'alli\'e le plus
+proche} (regroupement) et appelle des renforts toutes les $1.2$\,s.
+
+\subsection{4.6 Vis\'ee Anticip\'ee (lead targeting)}
+Le garde vise l\`a o\`u le joueur \emph{sera}, compte tenu du temps de vol de la
+balle ($v_b = 700$\,px/s). On r\'esout par point fixe (2 it\'erations) :
+\[
+\vec{a}_0 = \vec{p}_{\text{joueur}},\qquad
+\vec{a}_{k+1} = \vec{p}_{\text{joueur}} + \vec{v}_{\text{joueur}}\cdot
+\frac{\lVert \vec{a}_k - \vec{p}_{\text{garde}} \rVert}{v_b}.
+\]
+$\vec{a}_2$ est le point vis\'e. Fuir en ligne droite devient dangereux.
+
+\subsection{4.7 \'Evitement du Tir Ami}
+Avant de tirer, le garde v\'erifie qu'aucun alli\'e n'est dans son couloir de tir.
+Soit $\vec{d}$ la direction normalis\'ee vers le point vis\'e et $D$ la distance \`a
+la cible. Pour chaque alli\'e en position $\vec{g}$, on projette
+$\vec{r}=\vec{g}-\vec{m}$ (depuis le canon $\vec{m}$) :
+\[
+\text{proj} = \vec{r}\cdot\vec{d},\qquad
+\text{couloir bloqu\'e si } 0 < \text{proj} < D \ \text{et}\
+\big\lVert \vec{r} - \text{proj}\,\vec{d}\big\rVert < \texttt{ALLY\_LANE\_WIDTH}=26.
+\]
+Si le couloir est bloqu\'e, le garde ne tire pas et se repositionne.
+
+\subsection{4.8 Coordination de Groupe}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Alerte locale} : en entrant en combat, un garde pr\'evient ceux situ\'es
+        dans \param{ALERT\_RADIUS}{420}\,px (pas tout le b\^atiment).
+  \item \textbf{Le bruit des tirs alerte} : chaque coup de feu r\'eveille les gardes
+        \`a moins de \param{GUNFIRE\_ALERT\_RADIUS}{520}\,px, qui viennent investiguer.
+  \item \textbf{M\'emoire partag\'ee} : la derni\`ere position connue est diffus\'ee via
+        \code{GameState.report\_player\_pos}.
+\end{itemize}
+
+\subsection{4.9 Recherche Coordonn\'ee}
+En \'etat SEARCH, chaque garde inspecte \emph{sa} zone autour d'une ancre propre,
+plac\'ee sur une position \textbf{anticip\'ee de la fuite} :
+\[
+\vec{ancre} = \vec{p}_{\text{dernier vu}} + \underbrace{\vec{v}_{\text{joueur}}\cdot \texttt{SEARCH\_LEAD}}_{\text{anticipation}}
++ \texttt{SEARCH\_SPREAD}\,(\cos\alpha_i,\ \sin\alpha_i),
+\]
+o\`u $\alpha_i$ est un angle stable et unique par garde (dispersion). Cela couvre
+le terrain au lieu de provoquer un attroupement. \param{SEARCH\_LEAD}{0.55}\,s,
+\param{SEARCH\_SPREAD}{150}\,px, \param{SEARCH\_RADIUS}{120}\,px.
+
+% ============================== 5. NIVEAUX ==============================
+\section{Design des Niveaux}
+
+\subsection{5.1 Syst\`eme Data-Driven}
+Les niveaux sont d\'ecrits dans \code{levels.gd} (\code{LevelCatalog}) sous forme de
+dictionnaires \{ \texttt{name, subtitle, theme, ambiance, needs\_objective, map,
+guards, medkits, terminals} \}. Le g\'en\'erateur \code{level.gd} lit
+\code{LevelCatalog.get\_level(GameState.current\_level)} et construit la sc\`ene
+selon le th\`eme. Chaque carte est une grille ASCII $46\times32$, $\texttt{TILE}=64$\,px.
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\textbf{Symbole} & \textbf{Signification} \\
+\midrule
+\texttt{\#} & obstacle plein (mur / lisi\`ere d'arbres / immeuble) \\
+\texttt{o} & couverture basse (caisse / rocher / voiture) \\
+\texttt{W} & eau (infranchissable, bloque aussi la vue) \\
+\texttt{.} & sol praticable \\
+\texttt{P} & entr\'ee joueur \quad \texttt{C} coffre (objectif) \quad \texttt{X} sortie/exfil \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{5.2 Niveau 0 --- Centre de Recherche}
+Int\'erieur sombre (ambiance gris-bleu). Th\`eme \code{research} : tuiles textur\'ees,
+mobilier (bureaux, serveurs, sofas, lasers). 8 gardes, 2 trousses de soins, 1
+terminal, 1 coffre central. \textbf{Seul niveau \`a objectif obligatoire.}
+
+\subsection{5.3 Niveau 1 --- La For\^et}
+Ext\'erieur vert. Th\`eme \code{forest} : arbres et buissons (sprites + feuillages
+proc\'eduraux), rochers. Une \textbf{rivi\`ere} (cases \texttt{W}, lignes 15--16)
+coupe la carte avec un \textbf{pont} (passage praticable). 10 gardes,
+2 trousses. Traverser du bas vers l'exfil en haut.
+
+\subsection{5.4 Niveau 2 --- La Ville}
+Th\`eme \code{city} : fond asphalte, immeubles proc\'eduraux, voitures, marquages
+routiers. Un \textbf{fleuve} (lignes 3--4) avec un pont menant \`a l'\textbf{h\'elipad}
+d'extraction (rep\`ere « H »). 10 gardes, 2 trousses.
+
+\subsection{5.5 Navigation}
+Pathfinding par \code{AStarGrid2D} : les cases \texttt{\#}, \texttt{o} et \texttt{W}
+sont marqu\'ees solides ; d\'eplacement diagonal autoris\'e seulement sans obstacle.
+Au chargement, \code{\_validate\_nav()} effectue un BFS depuis \texttt{P} et avertit
+si le coffre, la sortie, une trousse, un terminal ou une case de garde est
+inaccessible ou solide.
+
+\subsection{5.6 R\`egles de Level Design}
+\begin{itemize}[leftmargin=*]
+  \item Au moins deux chemins entre zones (choix tactique).
+  \item Couverture r\'eguli\`ere (jamais de longue ligne droite \`a d\'ecouvert).
+  \item Le point d'exfiltration est lisible (rep\`ere visuel, h\'elipad en ville).
+  \item \'Eclairage : zones sombres = s\^ures, zones \'eclair\'ees = expos\'ees.
+  \item Connectivit\'e P$\to$X valid\'ee par BFS pour les trois cartes.
+\end{itemize}
+
+% ============================== 6. INTERFACE ==============================
+\section{Interface et Audio}
+
+\subsection{6.1 HUD}
+CanvasLayer minimal : vies (c\oe urs), barre de sprint, munitions, libell\'e
+d'alarme color\'e, score, minimap. La banni\`ere d'intro affiche
+« NIVEAU $n$/3 --- \emph{nom} » avec sous-titre, puis s'estompe.
+
+\subsection{6.2 \'Ecrans}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{\'Ecran} & \textbf{Contenu} \\
+\midrule
+Menu principal & Logo, boutons Jouer / Quitter (Quitter masqu\'e sur mobile) \\
+Briefing & Objectifs et consignes avant la mission \\
+Jeu en cours & HUD minimal, immersion \\
+Pause & Reprendre / Recommencer / Menu principal / Quitter \\
+Mission r\'eussie & Score d\'etaill\'e (temps, gardes, discr\'etion, total) \\
+Mission \'echou\'ee & Cause, Recommencer / Quitter \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{6.3 Sons}
+Tir silencieux, tir de garde, rechargement, impact, garde abattu, clic UI,
+exfiltration, plus une musique adaptative pilot\'ee par l'\'etat d'alarme
+(\code{AudioManager}).
+
+% ============================== 7. ARCHITECTURE ==============================
+\section{Architecture Technique}
+
+\subsection{7.1 Sc\`enes principales}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Sc\`ene} & \textbf{R\^ole} \\
+\midrule
+Main.tscn & Menu principal (point d'entr\'ee). \\
+Briefing.tscn & \'Ecran de briefing $\to$ lance la campagne. \\
+Level\_01.tscn & Sc\`ene g\'en\'erique recharg\'ee pour chaque niveau (data-driven). \\
+Player.tscn & CharacterBody2D, Sprite, Muzzle, CoverArea. \\
+Guard.tscn & CharacterBody2D, machine \`a \'etats, c\^one de vision. \\
+Bullet.tscn & Area2D rapide, collisions par couche. \\
+HUD.tscn, TouchControls.tscn & Interface et double-stick tactile. \\
+Coffre / Terminal / Medkit / Exit & Objets interactifs (Area2D). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{7.2 Autoloads}
+\code{GameState} (\'etat d'alarme, score, vies, progression de campagne, signaux)
+et \code{AudioManager} (musique adaptative, SFX), persistants \`a travers les
+rechargements de sc\`ene.
+
+\subsection{7.3 Couches de Collision}
+1=\emph{world}, 2=\emph{player}, 3=\emph{guards}, 4=\emph{bullets\_player},
+5=\emph{bullets\_enemy}, 6=\emph{interactables}. La couche 1 bloque \`a la fois le
+mouvement \emph{et} la vision (= couverture).
+
+\subsection{7.4 Assets et Licences}
+Sprites Kenney.nl (CC0) et pack \code{mes\_assets} (nature, v\'ehicules, routes,
+256\,px top-down). Aucune ressource sous licence restrictive.
+
+% ============================== 8. DEPLOIEMENT ==============================
+\section{D\'eploiement Android / Play Store}
+
+\subsection{8.1 Configuration Mobile}
+Orientation \emph{landscape} verrouill\'ee ; \code{stretch = canvas\_items} +
+\code{aspect = expand} (adaptation \`a tous les ratios) ; renderer
+\code{gl\_compatibility} (mobile) ; \'emulation tactile/souris crois\'ee ;
+\code{quit\_on\_go\_back = false} pour g\'erer le bouton Retour (pause au lieu de
+quitter).
+
+\subsection{8.2 Presets d'Export}
+Deux presets dans \code{export\_presets.cfg} : « Android APK » (test rapide,
+\emph{runnable}) et « Android AAB (Play Store) » (publication). Communs :
+package \code{com.eclipse.runaway}, version \code{1.0} (code 1), build Gradle,
+architectures \code{arm64-v8a} + \code{armeabi-v7a}, mode immersif, \textbf{aucune
+permission} (jeu hors-ligne).
+
+\subsection{8.3 Signature}
+Cl\'e release g\'en\'er\'ee hors d\'ep\^ot par \code{tools/gen\_keystore.ps1} et lue par
+Godot via les variables d'environnement
+\code{GODOT\_ANDROID\_KEYSTORE\_RELEASE\_*}. Le \code{.gitignore} exclut
+\code{*.keystore}, \code{build/}, \code{*.aab}, \code{*.apk}.
+
+\subsection{8.4 Conformit\'e Play Store}
+AAB obligatoire (configur\'e), API cible 35, ic\^ones lanceur + adaptive + listing
+512\,px g\'en\'er\'ees (\code{mobile\_icons/}). \`A fournir c\^ot\'e console : captures
+d'\'ecran, feature graphic 1024$\times$500, politique de confidentialit\'e (aucune
+donn\'ee collect\'ee), questionnaire de contenu (violence cartoon $\to$ PEGI~12 /
+Teen). \textbf{Incr\'ementer \code{version/code} \`a chaque mise \`a jour.}
+
+% ============================== 9. GLOSSAIRE ==============================
+\section{Glossaire}
+\begin{description}[leftmargin=2.5cm,style=nextline]
+  \item[Top-Down] Vue de dessus ; la cam\'era regarde le personnage depuis le haut.
+  \item[AAB] Android App Bundle ; format de publication exig\'e par le Play Store.
+  \item[AStarGrid2D] Pathfinding sur grille utilis\'e par les gardes.
+  \item[Suite de Weyl] $\operatorname{frac}(n\cdot\phi)$ ; r\'epartit des angles de
+        fa\c{c}on quasi-uniforme (encerclement des gardes).
+  \item[Lead targeting] Vis\'ee anticip\'ee tenant compte du temps de vol du projectile.
+  \item[Hyst\'er\'esis] Zone morte \'evitant les oscillations de positionnement.
+  \item[i-frame] Fen\^etre d'invincibilit\'e temporaire apr\`es un coup.
+  \item[Data-driven] Niveaux d\'ecrits par des donn\'ees (catalogue) plut\^ot qu'en dur.
+\end{description}
+
+\vfill
+\begin{center}\small\itshape
+Document g\'en\'er\'e \`a partir du code source de production --- RUNAWAY : Operation Eclipse, v4.0.
+\end{center}
+
+\end{document}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Pad base circle -->
+  <circle cx="60" cy="60" r="56" fill="#3D4555"/>
+  <circle cx="60" cy="60" r="56" fill="none" stroke="#2A3040" stroke-width="3"/>
+  <!-- Outer ring -->
+  <circle cx="60" cy="60" r="52" fill="none" stroke="#F5C842" stroke-width="4"/>
+  <!-- Inner circle -->
+  <circle cx="60" cy="60" r="36" fill="#4A5568"/>
+  <circle cx="60" cy="60" r="36" fill="none" stroke="#F5C842" stroke-width="2"/>
+  <!-- H letter -->
+  <line x1="44" y1="44" x2="44" y2="76" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <line x1="76" y1="44" x2="76" y2="76" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <line x1="44" y1="60" x2="76" y2="60" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <!-- Corner marks -->
+  <line x1="8" y1="60" x2="20" y2="60" stroke="#F5C842" stroke-width="3" stroke-linecap="round"/>
+  <line x1="100" y1="60" x2="112" y2="60" stroke="#F5C842" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="8" x2="60" y2="20" stroke="#F5C842" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="100" x2="60" y2="112" stroke="#F5C842" stroke-width="3" stroke-linecap="round"/>
+</svg>

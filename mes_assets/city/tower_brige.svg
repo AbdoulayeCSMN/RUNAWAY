@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 900 460" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <rect x="398" y="0" width="104" height="64" style="fill:rgb(90,95,106);"/>
+    <path d="M450,0L450,62" style="fill:none;fill-rule:nonzero;stroke:rgb(255,238,136);stroke-width:2px;stroke-dasharray:14,8;"/>
+    <path d="M400,0L400,62" style="fill:none;fill-rule:nonzero;stroke:white;stroke-opacity:0.25;stroke-width:1px;"/>
+    <path d="M500,0L500,62" style="fill:none;fill-rule:nonzero;stroke:white;stroke-opacity:0.25;stroke-width:1px;"/>
+    <rect x="398" y="396" width="104" height="64" style="fill:rgb(90,95,106);"/>
+    <path d="M450,396L450,460" style="fill:none;fill-rule:nonzero;stroke:rgb(255,238,136);stroke-width:2px;stroke-dasharray:14,8;"/>
+    <path d="M400,396L400,460" style="fill:none;fill-rule:nonzero;stroke:white;stroke-opacity:0.25;stroke-width:1px;"/>
+    <path d="M500,396L500,460" style="fill:none;fill-rule:nonzero;stroke:white;stroke-opacity:0.25;stroke-width:1px;"/>
+    <rect x="384" y="60" width="132" height="340" style="fill:rgb(104,112,128);"/>
+    <path d="M450,60L450,400" style="fill:none;fill-rule:nonzero;stroke:rgb(255,238,136);stroke-width:2px;stroke-dasharray:18,10;"/>
+    <path d="M400,60L400,400" style="fill:none;fill-rule:nonzero;stroke:white;stroke-opacity:0.22;stroke-width:1px;"/>
+    <path d="M500,60L500,400" style="fill:none;fill-rule:nonzero;stroke:white;stroke-opacity:0.22;stroke-width:1px;"/>
+    <rect x="376" y="60" width="10" height="340" style="fill:rgb(119,128,144);fill-opacity:0.9;"/>
+    <rect x="514" y="60" width="10" height="340" style="fill:rgb(119,128,144);fill-opacity:0.9;"/>
+    <rect x="368" y="60" width="10" height="340" style="fill:rgb(90,106,122);"/>
+    <rect x="522" y="60" width="10" height="340" style="fill:rgb(90,106,122);"/>
+    <path d="M450,60L450,400" style="fill:none;fill-rule:nonzero;stroke:black;stroke-opacity:0.15;stroke-width:3px;"/>
+    <path d="M368,60C361.333,106.667 361.333,220 368,400" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:3.5px;"/>
+    <path d="M532,60C538.667,106.667 538.667,220 532,400" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:3.5px;"/>
+    <path d="M368,80L376,80" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M367,100L376,100" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M366,120L376,120" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M365,145L376,145" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M364,175L376,175" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M364,230L376,230" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M364,285L376,285" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M365,325L376,325" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M366,355L376,355" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M367,378L376,378" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M532,80L524,80" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M533,100L524,100" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M534,120L524,120" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M535,145L524,145" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M536,175L524,175" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M536,230L524,230" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M536,285L524,285" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M535,325L524,325" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M534,355L524,355" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+    <path d="M533,378L524,378" style="fill:none;fill-rule:nonzero;stroke:rgb(74,90,112);stroke-width:1.5px;"/>
+</svg>
